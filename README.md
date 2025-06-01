@@ -1,73 +1,67 @@
-# Terrateam Demo Infrastructure (Null Resources)
+# Terrateam Demo Repository
 
-This repository demonstrates a Terrateam demo environment using Terraform modules with null resources. It is designed for new Terrateam users to learn how to use Terrateam without the neeed for cloud provider credentials.
+Try Terrateam in 5 minutes without any cloud credentials. This demo uses null resources instead of real infrastructure, so you can learn Terrateam's workflow without any cloud credentials.
 
-## Repository Structure
+## Quick Start (5 minutes)
 
-```
-.
-├── modules
-│   └── compute
-│       └── main.tf         # Module that simulates compute instance creation using a null resource
-├── production
-│   └── compute
-│       └── main.tf         # Production environment using a local backend
-└── staging
-    └── compute
-        └── main.tf         # Staging environment using a local backend
-```
+1. **Fork this repository**
+   Create a fork of this repository in your GitHub account.
 
-- **modules/compute**: Contains the reusable module that uses a `null_resource` with a `local-exec` provisioner to simulate creating a compute instance.
-- **production/compute** and **staging/compute**: These directories show how to call the module in different environments.
-
-## How It Works
-
-- **Null Resources:** Instead of provisioning actual infrastructure resources, the module uses a `null_resource` to simulate instance creation. The `local-exec` provisioner prints out details, mimicking resource creation.
-- **Local Backend:** The Terraform backend is configured to use a local state file (e.g., `staging.tfstate` and `production.tfstate`), eliminating the need for cloud provider credentials or remote state management.
-
-## Apply Before Merge or Apply After Merge
-In this repository, you can apply changes before or after merging. Comment `terrateam apply` after the plan operation runs, or merge the pull request to trigger the apply operation automatically. These settings are configurable in `.terrateam/config.yml`.
-
-## Prerequisites
-
-- A repository configured with Terrateam
-
-## Getting Started
-
-1. **Fork This Repository**
-   Create a fork of this repository in your GitHub organization.
-
-2. **Install Terrateam**
-   Ensure Terrateam is set up and configured for your repository. Follow the [Terrateam Quickstart Guide](https://docs.terrateam.io/quickstart-guide).
-
-3. **Create a Pull Request**
-   Modify any Terraform file (e.g., change a variable in `staging/compute/main.tf`) and push the changes to a new branch. Open a pull request (PR). Terrateam will automatically trigger `terraform plan` and post the output as a comment on the PR.
-
-4. **Review the Plan**
-   Look at the plan output in the PR comments to see what Terraform will do. Since this is a demo, it will only simulate infrastructure changes using a null resource.
-
-5. **Apply**
-   Once satisfied, trigger an apply by merging the pull request or commenting:
+2. **Enable GitHub Actions workflows**
+   > ⚠️ **Important:** Forked repositories disable workflows by default for security reasons.
    
-   ```
-   terrateam apply
-   ```
+   - Go to your forked repository and click the **Actions** tab
+   - You'll likely see "Workflows aren’t being run on this forked repository"
+   - Click on **I understand my workflows, go ahead and enable them**
+   
+   ![Enable GitHub Actions workflows](./images/enable-workflows.png)
 
-   Terrateam will apply the changes and post the results in the PR comments. If the apply is successful then the pull request will automatically merge if not merged already.
+3. [Install the Terrateam GitHub App](https://github.com/apps/terrateam-action) on your account/organization
 
-## Customization
+4. **Try it out**
+   - Edit `dev/main.tf` - change `count = 0` to `count = 1`
+   - Create a new branch and push your changes
+   - Open a pull request
+   - Watch Terrateam automatically comment with the terraform plan!
 
-- **Module Variables:**
-  You can modify variables such as `instance_count`, `instance_name`, `instance_zone`, `boot_disk_image`, and `network_name` in the module. Adjust these values in the respective environment's `main.tf` to experiment with different configurations.
+5. **Apply the changes**
+   Comment `terrateam apply` on the PR to apply the changes. Terrateam will apply and auto-merge the PR if successful.
 
-- **Backend Configuration:**
-  The local backend is used for simplicity. You can modify the backend settings if you would like to experiment with other state management solutions.
+## What You'll See
 
-- Try different values for instance_count to see how Terrateam handles multiple resources.
+When you open your first PR, Terrateam will automatically comment with the terraform plan output:
 
-- **Note:** Setting instance_count to 0 will result in no planned changes because state is not persisted in this demo repository.
+![Terrateam Plan](./images/terrateam-plan.png)
 
-- [Read the docs](https://docs.terrateam.io/) to experiment with more features.
+This demo uses `null_resource`, which doesn’t provision anything. It’s just a placeholder to show how Terrateam runs the Terraform workflow.
+
+> ⚠️ **Important**: This demo doesn't persist Terraform state between runs. Each `terraform plan` starts fresh, so you won't see destroy operations for previously "created" resources. This keeps the demo simple, but real Terrateam deployments use persistent state backends.
+
+## About This Demo
+
+Terrateam automates Terraform workflows through pull requests. When you make infrastructure changes, Terrateam automatically runs `terraform plan` and posts results as PR comments. You can then apply changes directly from the PR.
+
+This demo repository uses:
+- **Null Resources:** Instead of real infrastructure, the module uses `null_resource`.
+- **Local Backend:** Terraform state files are stored locally, eliminating the need for cloud provider credentials.
+- **modules/**: Contains the reusable module 
+- **dev/**: Shows how to call the module in a development environment
+
+## Troubleshooting
+
+**Terrateam isn't commenting on my PR?**
+- Check your repository's Actions tab for disabled workflows
+- Verify the Terrateam GitHub App is installed on your repository
+- Make sure your PR changes Terraform files (`.tf` files)
+
+**Want to understand how it works?** Check `modules/main.tf` to see how null resources work without creating real infrastructure
+
+## Next Steps
+
+Ready for real infrastructure? Here's what to do next:
+- [Explore Terrateam's features](https://docs.terrateam.io/) to see what else you can do
+- [Set up cloud provider integration](https://docs.terrateam.io/cloud-providers/) to work with real infrastructure
+- [Explore advanced workflows](https://docs.terrateam.io/advanced-workflows) like drift detection and policy enforcement
 
 ## Contributing
 
